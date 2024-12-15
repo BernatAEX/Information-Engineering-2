@@ -84,18 +84,18 @@ for i_plane in range(0,3):
     
     
     # --------------------------Students work on DC components --------------------------------- 
-    # Compress with Huffman 
 
     [lettercount_DC, nb_chr_DC] = hj.dict_freq_numbers(list_image_cat_DC, list(range(min(list_image_cat_DC),max(list_image_cat_DC)+1)))
     huffman_tree_dc = hj.build_huffman_tree(lettercount_DC)
     coding_dict_DC = hj.generate_code(huffman_tree_dc)
     compressed_DC = hj.compress(list_image_cat_DC, coding_dict_DC)
-    decoding_dict = hj.build_decoding_dict(coding_dict_DC)
-    decompressed_cat_DC = hj.decompress(compressed_DC, decoding_dict)
+    decoding_dict_DC = hj.build_decoding_dict(coding_dict_DC)
+    decompressed_cat_DC = hj.decompress(compressed_DC, decoding_dict_DC)
     
     
     # Decompress with Huffman 
     # decompressed_cat_DC should be the output of your Huffman decompressor 
+    print("DC Checker")
     print(decompressed_cat_DC == list_image_cat_DC) 
    
     # ---------------------------------------------------------------------------------------------
@@ -103,19 +103,36 @@ for i_plane in range(0,3):
     # ---- AC components processing    
     # RLE coding over AC components  
     AC_coeff = image_AC[:,i_plane] 
-    [AC_coeff_rl, AC_coeff_amp]= fc.RLE(AC_coeff)
+    [AC_coeff_rl, AC_coeff_amp] = fc.RLE(AC_coeff)
     list_image_rl_AC = np.ndarray.tolist(AC_coeff_rl)
     
     # --------------------------Students work on AC components ---------------------------------
     # Compress with Huffman 
     # Decompress with Huffman 
     # Rdecompressed_cat_AC should be the output of your Huffman decompressor 
-    decompressed_cat_AC = list_image_rl_AC  
-    
-   
-    # --------------------------------Students work on the nb_bit/ pixel ---------------------
- 
-     
+    # Compress with Huffman 
+    alphabet_cat_AC = set()
+    for pair in list_image_rl_AC:
+        alphabet_cat_AC.update(pair)
+
+    alphabet_cat_AC = list(alphabet_cat_AC)
+
+    [lettercount_AC, nb_chr_AC] = hj.dict_freq_numbers_2(list_image_rl_AC, alphabet_cat_AC)
+    huffman_tree_ac = hj.build_huffman_tree(lettercount_AC)
+    coding_dict_AC = hj.generate_code_2(huffman_tree_ac)
+    compressed_AC = hj.compress_2(list_image_rl_AC, coding_dict_AC)
+    decoding_dict_AC = hj.build_decoding_dict(coding_dict_AC)
+    decompressed_cat_AC = hj.decompress(compressed_AC, decoding_dict_AC)
+
+    print("AC Checker")
+    list_image_rl_AC_tuples = [tuple(pair) for pair in list_image_rl_AC]
+    print(decompressed_cat_AC == list_image_rl_AC_tuples)
+
+# --------------------------------Students work on the nb_bit/ pixel ---------------------
+
+
+
+
     
 # ---------------------------------------------------------------
 #                      Decompression 
