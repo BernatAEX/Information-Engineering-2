@@ -97,9 +97,10 @@ for i_plane in range(0,3):
     decompressed_cat_DC = hj.decompress(compressed_DC, decoding_dict_DC)
     
     entropy_DC_channel = hj.computeEntropy(lettercount_DC)
-    opt_DC_cr = image_DC_DPCM_cat.nbytes/(8*entropy_DC_channel*len(image_DC_DPCM_cat))
+    opt_DC_cr = image_DC_DPCM_cat.nbytes*8/(entropy_DC_channel*len(image_DC_DPCM_cat))
     opt_cr_DC_list.append(opt_DC_cr)
-    cr_DC_list.append(image_DC_DPCM_cat.nbytes/(8*len(compressed_DC)))
+    actual_cr_DC = float(image_DC_DPCM_cat.nbytes*8/len(compressed_DC))
+    cr_DC_list.append(actual_cr_DC)
     
 
 
