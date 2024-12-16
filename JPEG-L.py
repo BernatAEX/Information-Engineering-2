@@ -217,18 +217,9 @@ print("compression ration total image: ", 24/bits_per_image_jpegl )
 width = 0.3
 channel_list = ['Y', 'Cb', 'Cr']
 x_coords = np.arange(len(channel_list))
-pyplot.figure()
-pyplot.bar(x_coords-width/2, cr_AC_list, width=width, color='b', label='Actual compression ratio')
-pyplot.bar(x_coords+width/2, opt_cr_AC_list, width=width, color='g', label='Optimal compression ratio')
-pyplot.xticks(x_coords, channel_list)
-pyplot.xlabel('YCbCr channels')
-pyplot.ylabel('Compression ratio')
-pyplot.title('Assessment of Huffman coding algorithm')
-pyplot.legend()
-pyplot.grid()
-pyplot.show()
 
-fig, axs = pyplot.subplots(1,2)
+
+fig, axs = pyplot.subplots(1,2, sharey=True)
 
 axs[0].bar(x_coords-width/2, cr_AC_list, width=width, color='b', label='Actual compression ratio')
 axs[0].bar(x_coords+width/2, opt_cr_AC_list, width=width, color='g', label='Optimal compression ratio')
@@ -258,7 +249,10 @@ image_ycbcr_rec = im.fromarray(image_plane_rec,'YCbCr')
 # Convert back to RGB
 image_rec =  image_ycbcr_rec.convert('RGB')
 
+
+
 # Plot the image 
+pyplot.figure()
 pyplot.imshow(image_rec)
 pyplot.show() 
 
