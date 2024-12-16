@@ -209,7 +209,14 @@ for i_plane in range(0,3):
             image_plane_rec[i_row:i_row+8, j_col:j_col+8,i_plane ] = image_rec.astype(np.uint8)
             
 total_pixel = n_row * n_col
-print("number of bits per pixel = ", total_bits/total_pixel)
+bits_per_image_jpegl = total_bits/total_pixel
+print("number of bits per pixel = ", bits_per_image_jpegl)
+print("compression ration total image: ", 24/bits_per_image_jpegl )
+truncated_ycbcr = im.fromarray(image_trunc, 'YCbCr')
+
+size_original_truncated = 8*np.size(image_trunc)
+
+
 # Recovering the image from the array of YCbCr
 image_ycbcr_rec = im.fromarray(image_plane_rec,'YCbCr')
 
