@@ -11,6 +11,7 @@ import numpy as np
 from PIL import Image as im
 import jpeg_functions as fc 
 import huffman_functions as hj 
+import sys
 # Quantization matrix 
 Q =50; # quality  factor of JPEG in %
 
@@ -41,6 +42,9 @@ image_DC_rec = np.zeros((N_blocks.astype(np.int32),3), dtype = np.int32)
 image_AC = np.zeros((63*N_blocks,3),dtype = np.int32 )
 image_AC_rec = np.zeros((63*N_blocks,3),dtype = np.int32 )
 bits_per_pixel=np.zeros( 3 )
+
+opt_cr_DC_list = []
+cr_DC_list=[]
 # ---------------------------------------------------------------
 #                          Compression 
 #  --------------------------------------------------------------
@@ -92,11 +96,18 @@ for i_plane in range(0,3):
     decoding_dict_DC = hj.build_decoding_dict(coding_dict_DC)
     decompressed_cat_DC = hj.decompress(compressed_DC, decoding_dict_DC)
     
+    entropy_DC_channel = hj.computeEntropy(lettercount_DC)
+    opt_DC_cr = image_DC_DPCM_cat.nbytes/(8*entropy_DC_channel*len(image_DC_DPCM_cat))
+    opt_cr_DC_list.append(opt_DC_cr)
+    cr_DC_list.append(image_DC_DPCM_cat.nbytes/(8*len(compressed_DC)))
     
+
+
     # Decompress with Huffman 
     # decompressed_cat_DC should be the output of your Huffman decompressor 
     print("DC Checker")
     print(decompressed_cat_DC == list_image_cat_DC) 
+    
    
     # ---------------------------------------------------------------------------------------------
     
