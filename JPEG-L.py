@@ -13,7 +13,7 @@ import jpeg_functions as fc
 import huffman_functions as hj 
 import sys
 # Quantization matrix 
-Q =50; # quality  factor of JPEG in %
+Q =85; # quality  factor of JPEG in %
 
 Q_matrix = fc.quantization_matrix(Q) # Quantization matrix 
   
@@ -46,6 +46,7 @@ opt_cr_DC_list = []
 cr_DC_list=[]
 opt_cr_AC_list = []
 cr_AC_list=[]
+total_bits=0
 
 def compute_nbits_symbol(input_array):
     r = np.max(input_array)-np.min(input_array)+1
@@ -160,6 +161,11 @@ for i_plane in range(0,3):
 
 # --------------------------------Students work on the nb_bit/ pixel ---------------------
 
+    long_str_dc = "".join(image_DC_DPCM_amp)
+    long_str_ac = "".join(AC_coeff_amp.values())
+    total_bits_per_channel = len(compressed_DC) + len(compressed_AC) + len(long_str_ac) + len(long_str_dc)
+    total_bits += total_bits_per_channel
+
 
 
 
@@ -202,7 +208,8 @@ for i_plane in range(0,3):
             image_rec =  fc.DCT_inv(image_dct_rec) 
             image_plane_rec[i_row:i_row+8, j_col:j_col+8,i_plane ] = image_rec.astype(np.uint8)
             
-
+total_pixel = n_row * n_col
+print("number of bits per pixel = ", total_bits/total_pixel)
 # Recovering the image from the array of YCbCr
 image_ycbcr_rec = im.fromarray(image_plane_rec,'YCbCr')
 
