@@ -29,7 +29,6 @@ image_ycbcr_eval= np.array(image_ycbcr)
 image_trunc = image_ycbcr_eval[644:724,624:704] 
 
 pyplot.imshow(image_trunc) 
-pyplot.show()
 
 # Initializations
 n_row = np.size(image_trunc,0) # Number of rows 
@@ -110,7 +109,7 @@ for i_plane in range(0,3):
     entropy_DC_channel = hj.computeEntropy(lettercount_DC)
     opt_DC_cr = nbits_symbol_DC/(entropy_DC_channel)
     opt_cr_DC_list.append(opt_DC_cr)
-    actual_cr_DC = float(image_DC_DPCM_cat.nbytes*8/len(compressed_DC))
+    actual_cr_DC = len(image_DC_DPCM_cat)*nbits_symbol_DC/len(compressed_DC)
     cr_DC_list.append(actual_cr_DC)
     
 
@@ -151,12 +150,12 @@ for i_plane in range(0,3):
     list_image_rl_AC_tuples = [tuple(pair) for pair in list_image_rl_AC]
     print(decompressed_cat_AC == list_image_rl_AC_tuples)
 
-
+    nbits_array = [item for pair in AC_coeff_rl for item in pair]
     nbits_symbol_AC = compute_nbits_symbol(AC_coeff_rl)
     entropy_AC_channel = hj.computeEntropy(lettercount_AC)
     opt_AC_cr = nbits_symbol_AC/(entropy_AC_channel)
     opt_cr_AC_list.append(opt_AC_cr)
-    actual_cr_AC = float(AC_coeff_rl.nbytes*8/len(compressed_AC))
+    actual_cr_AC = len(AC_coeff_rl)*nbits_symbol_AC/len(compressed_AC)
     cr_AC_list.append(actual_cr_AC)
 
 # --------------------------------Students work on the nb_bit/ pixel ---------------------
