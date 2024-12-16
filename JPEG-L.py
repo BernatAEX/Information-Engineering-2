@@ -212,9 +212,44 @@ total_pixel = n_row * n_col
 bits_per_image_jpegl = total_bits/total_pixel
 print("number of bits per pixel = ", bits_per_image_jpegl)
 print("compression ration total image: ", 24/bits_per_image_jpegl )
-truncated_ycbcr = im.fromarray(image_trunc, 'YCbCr')
 
-size_original_truncated = 8*np.size(image_trunc)
+
+width = 0.3
+channel_list = ['Y', 'Cb', 'Cr']
+x_coords = np.arange(len(channel_list))
+pyplot.figure()
+pyplot.bar(x_coords-width/2, cr_AC_list, width=width, color='b', label='Actual compression ratio')
+pyplot.bar(x_coords+width/2, opt_cr_AC_list, width=width, color='g', label='Optimal compression ratio')
+pyplot.xticks(x_coords, channel_list)
+pyplot.xlabel('YCbCr channels')
+pyplot.ylabel('Compression ratio')
+pyplot.title('Assessment of Huffman coding algorithm')
+pyplot.legend()
+pyplot.grid()
+pyplot.show()
+
+fig, axs = pyplot.subplots(1,2)
+
+axs[0].bar(x_coords-width/2, cr_AC_list, width=width, color='b', label='Actual compression ratio')
+axs[0].bar(x_coords+width/2, opt_cr_AC_list, width=width, color='g', label='Optimal compression ratio')
+axs[0].set_xticks(x_coords, channel_list)
+axs[0].set_xlabel('YCbCr channels')
+axs[0].set_ylabel('Compression ratio')
+axs[0].set_title('AC components')
+axs[0].legend()
+axs[0].grid()
+axs[1].bar(x_coords-width/2, cr_DC_list, width=width, color='b', label='Actual compression ratio')
+axs[1].bar(x_coords+width/2, opt_cr_DC_list, width=width, color='g', label='Optimal compression ratio')
+axs[1].set_xticks(x_coords, channel_list)
+axs[1].set_xlabel('YCbCr channels')
+axs[1].set_ylabel('Compression ratio')
+axs[1].set_title('DC components')
+axs[1].legend()
+axs[1].grid()
+
+pyplot.suptitle('Assessment of Huffman coding')
+pyplot.tight_layout()
+pyplot.show()
 
 
 # Recovering the image from the array of YCbCr
