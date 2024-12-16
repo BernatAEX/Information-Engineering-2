@@ -119,5 +119,5 @@ def computeEntropy(probabilities) :
     sum = 0
     for i in probabilities :
         if probabilities[i] != 0 :
-            sum +=  - probabilities[i]*np.log2(probabilities[i])/np.log(2.0)
+            sum +=  - probabilities[i]*np.log2(probabilities[i]) #/np.log(2.0)
     return sum 
