@@ -13,7 +13,7 @@ import jpeg_functions as fc
 import huffman_functions as hj 
 import sys
 # Quantization matrix 
-Q =85; # quality  factor of JPEG in %
+Q = 85; # quality  factor of JPEG in %
 
 Q_matrix = fc.quantization_matrix(Q) # Quantization matrix 
   
@@ -46,6 +46,8 @@ opt_cr_DC_list = []
 cr_DC_list=[]
 opt_cr_AC_list = []
 cr_AC_list=[]
+nbits_DC_list = []
+nbits_AC_list=[]
 total_bits=0
 
 def compute_nbits_symbol(input_array):
@@ -107,6 +109,7 @@ for i_plane in range(0,3):
     
 
     nbits_symbol_DC = compute_nbits_symbol(image_DC_DPCM_cat)
+    nbits_DC_list.append(nbits_symbol_DC)
     entropy_DC_channel = hj.computeEntropy(lettercount_DC)
     opt_DC_cr = nbits_symbol_DC/(entropy_DC_channel)
     opt_cr_DC_list.append(opt_DC_cr)
@@ -153,6 +156,7 @@ for i_plane in range(0,3):
 
     nbits_array = [item for pair in AC_coeff_rl for item in pair]
     nbits_symbol_AC = compute_nbits_symbol(AC_coeff_rl)
+    nbits_AC_list.append(nbits_symbol_AC)
     entropy_AC_channel = hj.computeEntropy(lettercount_AC)
     opt_AC_cr = nbits_symbol_AC/(entropy_AC_channel)
     opt_cr_AC_list.append(opt_AC_cr)
