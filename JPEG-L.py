@@ -272,15 +272,24 @@ Q_evo = {}
 for Q_l in Q_array:
     compression_ratio, _ = cooker(Q_l)
     Q_evo[Q_l] = compression_ratio
-    print(Q_l, compression_ratio)
+    #print(Q_l, compression_ratio)
 
 quality_fac = np.array(list(Q_evo.keys()))
 cr = np.array(list(Q_evo.values()))
+empty_y_axis = ['' for k in range(len(cr))]
 pyplot.figure()
 pyplot.plot(quality_fac, cr)
+pyplot.xlabel('Quality factor')
+pyplot.ylabel('Compression ratio')
+pyplot.grid()
 pyplot.show()
+
 pyplot.figure()
 pyplot.plot(quality_fac, quality_fac*cr)
+pyplot.xlabel('Quality factor')
+pyplot.ylabel('Product of quality factor and compression ratio')
+pyplot.yticks([])
+pyplot.grid()
 pyplot.show()
 idx_max = np.where(quality_fac*cr == np.max(quality_fac*cr))[0]
 
