@@ -28,7 +28,7 @@ image_ycbcr_eval= np.array(image_ycbcr)
 #  Troncate the image (to make simulations faster)
 image_trunc = image_ycbcr_eval[644:724,624:704] 
 
-pyplot.imshow(image_trunc) 
+#pyplot.imshow(image_trunc) 
 
 # Initializations
 n_row = np.size(image_trunc,0) # Number of rows 
@@ -49,6 +49,10 @@ cr_AC_list=[]
 nbits_DC_list = []
 nbits_AC_list=[]
 total_bits=0
+avg_l_DC=[]
+avg_l_AC=[]
+ent_DC_list=[]
+ent_AC_list=[]
 
 def compute_nbits_symbol(input_array):
     r = np.max(input_array)-np.min(input_array)+1
@@ -114,7 +118,9 @@ for i_plane in range(0,3):
     opt_DC_cr = nbits_symbol_DC/(entropy_DC_channel)
     opt_cr_DC_list.append(opt_DC_cr)
     actual_cr_DC = len(image_DC_DPCM_cat)*nbits_symbol_DC/len(compressed_DC)
+    avg_l_DC.append(len(compressed_DC)/len(image_DC_DPCM_cat))
     cr_DC_list.append(actual_cr_DC)
+    ent_DC_list.append(entropy_DC_channel)
     
 
 
@@ -162,6 +168,8 @@ for i_plane in range(0,3):
     opt_cr_AC_list.append(opt_AC_cr)
     actual_cr_AC = len(AC_coeff_rl)*nbits_symbol_AC/len(compressed_AC)
     cr_AC_list.append(actual_cr_AC)
+    avg_l_AC.append(len(compressed_AC)/len(AC_coeff_rl))
+    ent_AC_list.append(entropy_AC_channel)
 
 # --------------------------------Students work on the nb_bit/ pixel ---------------------
 
@@ -218,26 +226,39 @@ print("number of bits per pixel = ", bits_per_image_jpegl)
 print("compression ration total image: ", 24/bits_per_image_jpegl )
 
 
-width = 0.3
+width = 0.2
 channel_list = ['Y', 'Cb', 'Cr']
 x_coords = np.arange(len(channel_list))
 
 
 fig, axs = pyplot.subplots(1,2, sharey=True)
+opt_cr_DC_list=np.array(opt_cr_DC_list)
+cr_DC_list = np.array(cr_DC_list)
+opt_cr_AC_list = np.array(opt_cr_AC_list)
+cr_AC_list = np.array(cr_AC_list)
+avg_l_DC=np.array(avg_l_DC)
+avg_l_AC = np.array(avg_l_AC)
+ent_DC_list=np.array(ent_DC_list)
+ent_AC_list = np.array(ent_AC_list)
 
-axs[0].bar(x_coords-width/2, cr_AC_list, width=width, color='b', label='Actual compression ratio')
-axs[0].bar(x_coords+width/2, opt_cr_AC_list, width=width, color='g', label='Optimal compression ratio')
+axs[0].bar(x_coords-2*width/2, ent_AC_list, width=width, color='g', label='Lower bound')
+axs[0].bar(x_coords, avg_l_AC, width=width, color='b', label='Average length')
+axs[0].bar(x_coords+2*width/2, ent_AC_list+1, width=width, color='r', label='Upper bound')
 axs[0].set_xticks(x_coords, channel_list)
 axs[0].set_xlabel('YCbCr channels')
-axs[0].set_ylabel('Compression ratio')
+axs[0].set_ylabel('Average length [bits/pixel]')
 axs[0].set_title('AC components')
 axs[0].legend()
+
 axs[0].grid()
-axs[1].bar(x_coords-width/2, cr_DC_list, width=width, color='b', label='Actual compression ratio')
-axs[1].bar(x_coords+width/2, opt_cr_DC_list, width=width, color='g', label='Optimal compression ratio')
+
+
+axs[1].bar(x_coords-2*width/2, ent_DC_list, width=width, color='g', label='Lower bound')
+axs[1].bar(x_coords, avg_l_DC, width=width, color='b', label='Average length')
+axs[1].bar(x_coords+2*width/2, ent_DC_list+1, width=width, color='r', label='Upper bound')
 axs[1].set_xticks(x_coords, channel_list)
 axs[1].set_xlabel('YCbCr channels')
-axs[1].set_ylabel('Compression ratio')
+axs[1].set_ylabel('Average length [bits/pixel]')
 axs[1].set_title('DC components')
 axs[1].legend()
 axs[1].grid()
